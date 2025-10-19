@@ -1,0 +1,21 @@
+Let's enhance the **WealthAI** placeholder page (`WealthAiPage.jsx`) to make it feel more realistic for the demo.
+
+1.  **Keep Existing UI:** Maintain the basic chat interface (message display area, input field, send button) styled with Tailwind CSS.
+2.  **Add Sample Prompts:** Above the input field, add a few clickable "suggestion chips" or buttons with example questions a user might ask. Examples:
+    * "What's my savings balance?"
+    * "Transfer $5 to Emergency Vault"
+    * "Set a goal for education"
+3.  **Improve Simulated Interaction:**
+    * When the user clicks a **suggestion chip**, automatically populate the input field with that text and simulate sending it (trigger the send action).
+    * When the user types a message and clicks **"Send"** (or uses a suggestion chip):
+        * Display the user's message in the chat area (maybe aligned to the right).
+        * **(New)** Show a fake "WealthAI is typing..." indicator for 1-2 seconds.
+        * **(New)** Based on simple keywords in the user's message, display a *more relevant* canned response (aligned to the left). Examples:
+            * If message contains "balance" or "savings": "WealthAI: Checking your balances... Your Micro-Savings Vault has [show actual balance fetched from Supabase, if easy, otherwise use placeholder like '$XX.XX']."
+            * If message contains "transfer" or "move": "WealthAI: I can help with that soon! Transfer functionality is coming."
+            * If message contains "goal": "WealthAI: Great idea! Goal-setting features will be available shortly."
+            * For anything else: "WealthAI: I'm still learning how to help with that, but I'm improving quickly!"
+        * Clear the input field after sending.
+    * **(New)** Add simple timestamps (e.g., "4:30 PM") next to each message in the chat area.
+4.  **No Real AI:** Remember, this is still just a simulation. No need to connect to any actual AI APIs. Fetching the balance is the only real data needed, if easily accessible within the component.
+5.  **Commit Changes:** Commit the changes to GitHub with the message: `feat: Enhance WealthAI placeholder with simulated interaction`.

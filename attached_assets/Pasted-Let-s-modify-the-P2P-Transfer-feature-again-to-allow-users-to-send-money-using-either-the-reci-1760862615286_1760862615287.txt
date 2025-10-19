@@ -1,0 +1,26 @@
+Let's modify the **P2P Transfer** feature again to allow users to send money using *either* the recipient's WealthNest ID *or* their email address.
+
+1.  **Update Transfer UI:**
+    * In the Transfer modal/page (`TransferPage.jsx` or similar), ensure you have **both** input fields:
+        * One labeled "**Recipient's WealthNest ID**" (accepting a 6-digit number).
+        * Another one below it labeled "**Recipient's Email**" (accepting email format).
+    * Add placeholder text or a small note indicating the user should fill in **only one** of these fields.
+2.  **Update Transfer Logic:**
+    * When the "Send Money" button is clicked:
+        * Get the values from **both** the ID input and the Email input, as well as the Amount.
+        * **New Validation:**
+            * Check that the Amount is valid (positive, <= Micro-Savings balance).
+            * Check that **at least one** of the recipient fields (ID or Email) is filled in.
+            * Check that **not both** recipient fields are filled in. Show an error like "Please enter either an ID or an Email, not both."
+            * If ID is filled, validate it's a 6-digit number.
+            * If Email is filled, perform basic email format validation.
+            * Show appropriate error messages for any validation failures.
+        * **Determine Recipient Identifier:** Based on which field was filled (ID or Email), store the provided value (e.g., in a variable `recipient_identifier`).
+        * **Update Transaction Description:** Modify the Supabase call that inserts the transaction record for the sender. The `description` should now use the identifier provided:
+            * If ID was used: "**Transfer sent to ID: [recipient_id]**"
+            * If Email was used: "**Transfer sent to: [recipient_email]**"
+        * The logic for deducting the amount from the sender's Micro-Savings vault remains unchanged.
+3.  **Update Feedback Message:** Change the success message to reflect which identifier was used:
+    * If ID: "**Transfer of $[amount] to ID: [recipient_id] successful!**"
+    * If Email: "**Transfer of $[amount] to [recipient_email] successful!**"
+4.  **Commit Changes:** Commit the changes to GitHub with the message: `feat: Allow P2P transfer using either WealthNest ID or email`.

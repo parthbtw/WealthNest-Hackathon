@@ -1,0 +1,26 @@
+Let's add a second deposit option to the **Emergency Vault** page (`EmergencyVaultPage.jsx` or similar): transferring directly from the user's Micro-Savings Vault.
+
+1.  **Add New Button:** Below the existing deposit section, add a **new button** labeled "**Deposit from Micro-Savings Vault**".
+2.  **Create Transfer Modal:**
+    * When this new button is clicked, open a **modal (popup)**.
+    * The modal should display:
+        * Title: "Transfer from Micro-Savings to Emergency"
+        * The user's current Micro-Savings Vault balance (fetch this).
+        * An input field labeled "Amount to Transfer" (type="number", step="0.01").
+        * A "Confirm Transfer" button.
+3.  **Implement Transfer Logic:**
+    * When the "Confirm Transfer" button is clicked:
+        * Get the amount entered.
+        * **Validate:** Ensure the amount is positive and **less than or equal to** the current Micro-Savings Vault balance. Show an error if invalid.
+        * If valid, use the Supabase client library to:
+            * **Decrement** the `balance` of the user's `'micro_savings'` vault by the specified amount.
+            * **Increment** the `balance` of the user's `'emergency'` vault by the specified amount.
+            * **Insert** a transaction record for the withdrawal from Micro-Savings (negative amount, description like "Transfer to Emergency Vault").
+            * **Insert** a transaction record for the deposit into Emergency (positive amount, description like "Transfer from Micro-Savings").
+4.  **Provide Feedback:**
+    * After the Supabase operations succeed, close the modal.
+    * Show a success message like "Transfer successful!".
+    * Immediately update the displayed Emergency Vault balance on the page.
+    * Ensure the Micro-Savings balance is updated correctly wherever it might be displayed.
+5.  **Styling:** Style the new button and modal using Tailwind CSS to match the app theme.
+6.  **Commit Changes:** Commit the changes to GitHub with the message: `feat: Add option to deposit to Emergency Vault from Micro-Savings`.

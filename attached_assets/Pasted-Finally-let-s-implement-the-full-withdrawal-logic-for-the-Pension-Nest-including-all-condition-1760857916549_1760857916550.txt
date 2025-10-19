@@ -1,0 +1,24 @@
+Finally, let's implement the full withdrawal logic for the **Pension Nest**, including all conditions.
+
+1.  **Add Withdrawal UI:** Ensure `PensionNestPage.jsx` has a "Withdraw" button (or maybe "Check Eligibility / Withdraw").
+2.  **Check Eligibility on Page Load:**
+    * Fetch `balance`, `locked_until`, `vesting_start_date`, and the user's `pension_target_year`.
+    * **Determine Lock Status:** Check if `now() >= locked_until`.
+    * **Determine Vesting Status:** Check if `now() >= vesting_start_date + interval '10 years'`.
+    * **Determine Target Year Reached:** Check if `current_year >= pension_target_year`.
+    * **Determine Bonus Eligibility:** `bonus_eligible = (10_years_vested AND target_year_reached)`.
+    * **Determine Withdrawal Eligibility:** `withdrawal_eligible = (past_1_year_lock)`.
+3.  **Update UI Based on Eligibility:**
+    * If **NOT** `withdrawal_eligible` (still locked): Disable the "Withdraw" button and show "Funds locked until [Date]".
+    * If `withdrawal_eligible`: Enable the "Withdraw" button. Display clear information about the withdrawal conditions:
+        * Show calculated bonus: `bonus_amount = bonus_eligible ? balance * 0.02 : 0`.
+        * Show total withdrawable: `total_withdrawable = balance + bonus_amount`.
+        * Maybe change button text to "Withdraw Full Amount: $[total_withdrawable]".
+        * Add text explaining *why* the bonus is applied or not (e.g., "Includes 2% bonus (10+ years vested & target year reached)" or "Bonus not applicable yet").
+4.  **Implement Withdrawal Logic:** When the (enabled) "Withdraw" button is clicked:
+    * Perform the Supabase actions (assuming full withdrawal):
+        * **Update** pension vault `balance` to 0. Reset `locked_until`, `vesting_start_date` to `NULL`.
+        * **Insert** transaction for the main withdrawal (negative `balance`).
+        * **Insert** transaction for the bonus (negative `bonus_amount`), *if applicable*.
+    * Show success message detailing amount withdrawn and bonus (if any). Refresh UI state (balance 0, dates null, button maybe hidden/disabled).
+5.  **Commit Changes:** Commit with message: `feat: Implement full Pension Nest withdrawal logic with time-lock, target year, and bonus`.

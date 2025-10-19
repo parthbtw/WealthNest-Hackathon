@@ -1,0 +1,28 @@
+Let's significantly enhance the **Pension Nest** feature to match the full requirements, starting with setting a retirement year.
+
+1.  **Database Schema Change:**
+    * Modify the `profiles` table in Supabase. Add a new column named `pension_target_year` of type `integer` (nullable for now).
+    * Modify the `vaults` table. Add/ensure these columns exist specifically for the `'pension'` vault type:
+        * `locked_until` (type: `timestamp with time zone`, nullable)
+        * `vesting_start_date` (type: `timestamp with time zone`, nullable)
+    * Update the `supabase_schema.sql` file (or relevant setup file).
+
+2.  **Update Pension Nest UI (`PensionNestPage.jsx`):**
+    * **Check if Target Year is Set:** Fetch the `pension_target_year` from the user's profile. Also fetch the `vesting_start_date` from the pension vault (it will be null initially).
+    * **Conditional Display:**
+        * **If `pension_target_year` IS NULL:**
+            * Do NOT show the balance or deposit options yet.
+            * Instead, show a section asking the user to set their target retirement year. Include:
+                * An input field (type="number") labeled "Enter Target Retirement Year" (e.g., 2050). Add validation (must be a future year, maybe >= current year + 10).
+                * A "Set Retirement Year" button.
+        * **If `pension_target_year` IS NOT NULL:**
+            * Display the set target year: "Your Target Retirement Year: [Year]".
+            * Proceed to show the balance, deposit section, lock/vesting info (as we'll build next).
+
+3.  **Implement Set Year Logic:**
+    * When the "Set Retirement Year" button is clicked:
+        * Validate the entered year.
+        * Use the Supabase client to **update** the `pension_target_year` column in the user's `profiles` row.
+        * After success, refresh the page/component state to show the main Pension Nest view (balance, deposit, etc.).
+
+4.  **Commit Changes:** Commit these changes with the message: `feat: Add pension target year setup to profiles and UI`.

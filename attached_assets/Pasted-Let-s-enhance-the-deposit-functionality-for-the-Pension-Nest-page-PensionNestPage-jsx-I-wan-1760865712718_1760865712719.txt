@@ -1,0 +1,27 @@
+Let's enhance the deposit functionality for the **Pension Nest** page (`PensionNestPage.jsx`). I want to add a *second* way to deposit funds: transferring directly from the user's Micro-Savings Vault.
+
+1.  **Add New Button:** Below the existing deposit section (or wherever makes sense), add a **new, distinct button** labeled "**Deposit from Micro-Savings Vault**".
+2.  **Create Transfer Modal:**
+    * When this new button is clicked, open a **modal (popup)** specifically for this transfer.
+    * The modal should display:
+        * Title: "Transfer from Micro-Savings"
+        * The user's current Micro-Savings Vault balance (fetch this).
+        * An input field labeled "Amount to Transfer" (type="number", step="0.01").
+        * A "Confirm Transfer" button.
+3.  **Implement Transfer Logic:**
+    * When the "Confirm Transfer" button is clicked:
+        * Get the amount entered.
+        * **Validate:** Ensure the amount is positive and **less than or equal to** the current Micro-Savings Vault balance. Show an error message if invalid.
+        * If valid, use the Supabase client library to perform the following updates:
+            * **Decrement** the `balance` of the user's `'micro_savings'` vault by the specified amount.
+            * **Increment** the `balance` of the user's `'pension'` vault by the specified amount.
+            * **Insert** a transaction record for the withdrawal from Micro-Savings (negative amount, description like "Transfer to Pension Nest").
+            * **Insert** a transaction record for the deposit into Pension (positive amount, description like "Transfer from Micro-Savings").
+            * **Important:** Ensure the logic for setting `vesting_start_date` and `locked_until` on the *very first* pension deposit still works correctly, even if that first deposit comes via this transfer method.
+4.  **Provide Feedback:**
+    * After the Supabase operations succeed, close the modal.
+    * Show a success message like "Transfer successful!".
+    * Immediately update the displayed Pension Nest balance on the page.
+    * **Note:** Also ensure the Micro-Savings balance is updated correctly wherever it might be displayed (e.g., Dashboard, its own page).
+5.  **Styling:** Style the new button and modal using Tailwind CSS to match the app theme.
+6.  **Commit Changes:** Commit the changes to GitHub with the message: `feat: Add option to deposit to Pension Nest from Micro-Savings`.

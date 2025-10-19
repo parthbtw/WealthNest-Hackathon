@@ -1,0 +1,26 @@
+Let's add a new feature: **One-Click Transfers** between WealthNest users. Make it look and feel functional for the demo.
+
+1.  **Add Transfer Button:** On the main **Dashboard page** (`DashboardPage.jsx`), add a prominent "Transfer" button, perhaps near the Total Balance card or alongside the vault cards. Use a clear icon (like a paper plane ✈️ or arrows ⇄) and the text "Transfer".
+2.  **Create Transfer Modal/Page:**
+    * When the "Transfer" button is clicked, open a **modal (popup)** or navigate to a new page (`TransferPage.jsx`).
+    * This modal/page should have the following fields:
+        * **Recipient:** An input field labeled "Recipient's Email".
+        * **Amount:** An input field labeled "Amount to Send" (type="number", step="0.01").
+        * **Source:** Display text indicating the funds will come from the "Micro-Savings Vault" (we'll keep it simple for now). Show the current Micro-Savings balance here.
+        * **Confirm Button:** A button labeled "Send Money".
+3.  **Implement Transfer Logic (Simulated P2P):**
+    * When the "Send Money" button is clicked:
+        * Get the recipient's email and the amount to send.
+        * **Validate:**
+            * Ensure the recipient email field is not empty (basic validation).
+            * Ensure the amount is a valid positive number.
+            * Ensure the amount is **less than or equal to** the sender's current Micro-Savings Vault balance. Show appropriate error messages if validation fails.
+        * If validation passes, use the Supabase client library to:
+            * **Decrement** the `balance` of the sender's `'micro_savings'` vault by the specified amount.
+            * **Insert** a new row into the `transactions` table for the sender. Include `user_id`, the `vault_id` for micro-savings, the *negative* of the `amount`, and a `description` like: "Transfer sent to: [recipient_email]".
+4.  **Provide Feedback:**
+    * After the Supabase operations are successful, close the modal/navigate back.
+    * Show a clear success message like: "Transfer of $[amount] to [recipient_email] successful!"
+    * Immediately update the displayed Micro-Savings balance on the dashboard or wherever it's visible.
+5.  **Styling:** Style the button, modal/page, and inputs using Tailwind CSS consistent with the app's theme.
+6.  **Commit Changes:** Commit the changes to GitHub with the message: `feat: Implement simulated P2P transfer feature`.
